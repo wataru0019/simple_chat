@@ -29,3 +29,11 @@
     --transition-duration: 0.3s;
     --transition-timing: ease-in-out;
 }
+
+/* 全体のスクロール防止 */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    width: 100%;
+}

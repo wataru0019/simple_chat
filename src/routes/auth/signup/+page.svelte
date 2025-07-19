@@ -1,18 +1,50 @@
 <script lang="ts">
+    import { onMount } from "svelte";
+    import { goto } from "$app/navigation";
+    let email = $state("")
+    let password = $state("")
+
+    // onMount( async () => {
+    //     await userCreate()
+    // })
+
+    async function userCreate() {
+        const user = await fetch("/api/users", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
+        })
+        console.log(user)
+    }
+
+    async function handleSubmit(e: Event) {
+        e.preventDefault()
+        try {
+            await userCreate()
+            goto("/chat")
+        } catch {
+            console.log("登録失敗")
+        }
+    }
 
 </script>
 
 <div class="signin">
     <h2>signin</h2>
     <div class="form-wrapper">
-        <form>
+        <form onsubmit={handleSubmit}>
             <div class="form-control">
-                <label for="name">Name:</label>
-                <input type="text" name="name" placeholder="Name..." required />
+                <label for="email">Email:</label>
+                <input type="email" name="email" placeholder="your-mail@example.com..." bind:value={email} required />
             </div>
             <div class="form-control">
                 <label for="password">Password:</label>
-                <input type="password" name="password" placeholder="password..." required />
+                <input type="password" name="password" placeholder="password..." bind:value={password} required />
             </div>
             <div class="form-control submit">
                 <button type="submit">新規登録</button>
@@ -30,14 +62,6 @@
 </div>
 
 <style>
-    /* 全体のスクロール防止 */
-    html, body {
-        margin: 0;
-        padding: 0;
-        overflow-x: hidden;
-        width: 100%;
-    }
-
     .signin {
         display: flex;
         flex-direction: column;

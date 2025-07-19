@@ -1,18 +1,38 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
+    import { signIn } from "@auth/sveltekit/client";
+    let email = $state("")
+    let password = $state("")
+
+    async function handleLogin(e: Event){
+        e.preventDefault()
+        const result = await signIn("credentials", {
+            email: email,
+            password: password,
+            redirect: false
+        })
+
+        if(result?.error) {
+            console.log("ログイン失敗")
+        } else {
+            console.log("ログイン成功")
+            goto("/chat")
+        }
+    }
 
 </script>
 
 <div class="login">
     <h2>login</h2>
     <div class="form-wrapper">
-        <form>
+        <form onsubmit={handleLogin}>
             <div class="form-control">
-                <label for="name">Name:</label><br />
-                <input type="text" name="name" placeholder="Name..." required />
+                <label for="email">Email:</label><br />
+                <input type="email" name="email" placeholder="your-email@example.com..." bind:value={email} required />
             </div>
             <div class="form-control">
                 <label for="password">Password:</label><br />
-                <input type="password" name="password" placeholder="password..." required />
+                <input type="password" name="password" placeholder="password..." bind:value={password} required />
             </div>
             <div class="form-control submit">
                 <button type="submit">ログイン</button>
@@ -30,14 +50,6 @@
 </div>
 
 <style>
-    /* 全体のスクロール防止 */
-    html, body {
-        margin: 0;
-        padding: 0;
-        overflow-x: hidden;
-        width: 100%;
-    }
-
     .login {
         display: flex;
         flex-direction: column;

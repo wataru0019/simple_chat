@@ -4,10 +4,6 @@
     let email = $state("")
     let password = $state("")
 
-    // onMount( async () => {
-    //     await userCreate()
-    // })
-
     async function userCreate() {
         const user = await fetch("/api/users", {
             method: 'POST',
@@ -19,7 +15,6 @@
                 password: password
             })
         })
-        console.log(user)
     }
 
     async function handleSubmit(e: Event) {
@@ -125,6 +120,11 @@
 
     .submit button:hover {
         opacity: 0.9;
+    }
+
+    .goto-login a {
+        text-decoration: none;
+        color: var(--light-accent-color)
     }
 
     hr {

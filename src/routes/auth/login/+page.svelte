@@ -16,6 +16,7 @@
             console.log("ログイン失敗")
         } else {
             console.log("ログイン成功")
+            console.log(result)
             goto("/chat")
         }
     }
@@ -113,6 +114,11 @@
 
     .submit button:hover {
         opacity: 0.9;
+    }
+
+    .goto-signup a {
+        text-decoration: none;
+        color: var(--light-accent-color)
     }
 
     hr {

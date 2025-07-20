@@ -12,9 +12,11 @@
 
 <header>
     <div class="header-logo">
-        <h2 class="logo">
-            {$logo}
-        </h2>
+        <a href="/">
+            <h2 class="logo">
+                {$logo}
+            </h2>
+        </a>
     </div>
     <div class="header-menu">
         <div class="header-buttons">
@@ -35,6 +37,11 @@
     .header-logo {
         padding: var(--space-md);
         font-size: var(--font-size-lg);
+    }
+
+    .header-logo a {
+        text-decoration: none;
+        color: var(--dark-shade-color)
     }
 
     .header-menu {

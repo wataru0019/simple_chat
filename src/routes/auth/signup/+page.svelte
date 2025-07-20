@@ -49,6 +49,9 @@
             <div class="form-control submit">
                 <button type="submit">新規登録</button>
             </div>
+            <div class="goto-login">
+                <a href="/auth/login">ログインはこちら</a>
+            </div>
         </form>
     </div>
     <hr />

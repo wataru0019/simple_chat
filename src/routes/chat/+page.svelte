@@ -1,4 +1,5 @@
 <script lang="ts">
+    import Header from "$lib/components/Header.svelte";
     import type { Message } from "$lib/types"
     import { onMount } from "svelte";
     let messages: Message[] = $state([])
@@ -18,6 +19,7 @@
 </script>
 
 <main>
+    <Header />
     {#if messages.length === 0}
         <div class="chat-container">
             <div class="pre-chat">

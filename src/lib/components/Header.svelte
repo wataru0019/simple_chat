@@ -20,6 +20,7 @@
     </div>
     <div class="header-menu">
         <div class="header-buttons">
+            <a href="/user">My Page</a>
             <button onclick={handleLogout}>ログアウト</button>
         </div>
     </div>
@@ -46,6 +47,12 @@
 
     .header-menu {
         padding: var(--space-md);
+    }
+
+    .header-buttons a {
+        margin-right: var(--space-sm);
+        text-decoration: none;
+        color: var(--dark-shade-color)
     }
 
     .header-buttons button {

@@ -23,21 +23,27 @@ model User {
   updatedAt DateTime @updatedAt
 
   // リレーション
-  // chat Chats[]
-  // messages Messages[]
+  chat Chats[]
+  messages Message[]
 }
 
-// model Chats {
-//   id    Int     @id @default(autoincrement())
-//   userId String
+model Chats {
+  id    Int     @id @default(autoincrement())
+  userId Int // 外部キー
+  user User @relation(fields: [userId], references: [id])
+  messages Message[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
-//   // リレーション
-//   user  User
-// }
-
-// model Messages {
-//   id    Int     @id @default(autoincrement())
-
-//   // リレーション
-//   user  User
-// }
+model Message {
+  id    Int     @id @default(autoincrement())
+  role  String
+  content String
+  userId Int  // 外部キー
+  chatsId Int  // 外部キー
+  user User @relation(fields: [userId], references: [id])
+  chats Chats @relation(fields: [chatsId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -8,13 +8,6 @@
     let updateName = $state("")
     let updateEmail = $state("")
 
-    onMount(() => {
-        console.log("$user:", $user);
-        console.log("$user?.name:", $user?.name);
-        console.log("editName:", editName);
-        console.log("editEmail:", editEmail);
-    })
-
     $effect(() => {
         if ($userLoaded && $user) {
             editName = $user.name ?? "";

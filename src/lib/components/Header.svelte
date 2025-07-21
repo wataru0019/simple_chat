@@ -2,8 +2,6 @@
     import { signOut } from "@auth/sveltekit/client"
     import { logo } from "$lib/stores"
 
-    console.log(logo)
-
     async function handleLogout(e: Event) {
         e.preventDefault()
         signOut()
@@ -20,7 +18,8 @@
     </div>
     <div class="header-menu">
         <div class="header-buttons">
-            <a href="/user">My Page</a>
+            <a href="/user">User</a>
+            <a href="/chatlist">Chat</a>
             <button onclick={handleLogout}>ログアウト</button>
         </div>
     </div>
@@ -42,6 +41,7 @@
 
     .header-logo a {
         text-decoration: none;
+        font-size: var(--font-size-sm);
         color: var(--dark-shade-color)
     }
 

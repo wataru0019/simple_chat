@@ -3,14 +3,12 @@
     import type { Message } from "$lib/types"
     import { onMount } from "svelte";
     import { user } from "$lib/stores";
+    let { data } = $props()
     let messages: Message[] = $state([])
     let new_message: string = $state("");
     let chats_id: number = $state(1);
     onMount(() => {
-        // messages = [
-        //     { role: "user", content: "hi!"},
-        //     { role: "assistant", content: "hi! wataru!" }
-        // ]
+        messages = data.messages
     })
     async function requestAI() {
         const response = await fetch("/api/ai", {

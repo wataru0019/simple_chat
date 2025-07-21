@@ -23,6 +23,7 @@
     }
     
     .chat-link {
+        margin: var(--space-md) 0;
         padding-left: var(--space-sm);
         background-color: var(--light-shade);
         border: 1px solid var(--light-accent-color);

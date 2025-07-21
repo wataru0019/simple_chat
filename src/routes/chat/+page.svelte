@@ -5,7 +5,7 @@
     import { user } from "$lib/stores";
     let messages: Message[] = $state([])
     let new_message: string = $state("");
-    let chats_id: number = $state(1);
+    let chats_id: number = $state(0);
     onMount(() => {
         // messages = [
         //     { role: "user", content: "hi!"},
@@ -54,7 +54,7 @@
                     <button type="submit">Send</button>
                 </form>
                 <div class="tool-box">
-                    tools
+                    
                 </div>
             </div>
         </div>

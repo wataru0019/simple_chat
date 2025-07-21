@@ -6,7 +6,7 @@
     let { data } = $props()
     let messages: Message[] = $state([])
     let new_message: string = $state("");
-    let chats_id: number = $state(1);
+    let chats_id: number = $state(Number(data.chatId));
     onMount(() => {
         messages = data.messages
     })

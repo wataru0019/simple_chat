@@ -138,7 +138,9 @@
 
 import { getPrismaClient } from "./prisma"
 import bcrypt from "bcryptjs"
-import type { User, Chats, Message } from "@prisma/client"
+import pkg from "@prisma/client"
+const { User, Chats, Message } = pkg
+import type { User as UserType, Chats as ChatsType, Message as MessageType } from "@prisma/client"
 
 export async function hashPassword(password: string): Promise<string> {
     return await bcrypt.hash(password, 12)
@@ -152,7 +154,7 @@ export async function createUser(
         email: string,
         password: string,
         platform?: App.Platform
-    ): Promise<User | null> {
+    ): Promise<UserType | null> {
     try {
         const prisma = getPrismaClient(platform)
         
@@ -180,7 +182,7 @@ export async function createUser(
     }
 }
 
-export async function findUserByEmail(email: string, platform?: App.Platform): Promise<User | null> {
+export async function findUserByEmail(email: string, platform?: App.Platform): Promise<UserType | null> {
     try {
         const prisma = getPrismaClient(platform)
         return await prisma.user.findUnique({
@@ -198,7 +200,7 @@ export async function updateUser(
     id: number,
     data: { email: string, name: string, avator: string},
     platform?: App.Platform
-): Promise<User | null> {
+): Promise<UserType | null> {
     try {
         const prisma = getPrismaClient(platform)
         const updateUser = await prisma.user.update({
@@ -215,7 +217,7 @@ export async function updateUser(
 export async function createChats(
     userId: number,
     platform?: App.Platform
-): Promise<Chats | null> {
+): Promise<ChatsType | null> {
     try {
         const prisma = getPrismaClient(platform)
         const chats = await prisma.chats.create({
@@ -270,7 +272,7 @@ export async function createMessage(
     role: string,
     content: string,
     platform?: App.Platform
-): Promise<Message | null> {
+): Promise<MessageType | null> {
     try {
         const prisma = getPrismaClient(platform)
         const message = await prisma.message.create({

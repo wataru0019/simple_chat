@@ -13,7 +13,8 @@
 //     globalForPrisma.prisma = prisma;
 // }
 
-import { PrismaClient } from "@prisma/client"
+import pkg from "@prisma/client"
+const { PrismaClient } = pkg
 import { PrismaD1 } from "@prisma/adapter-d1"
 import { dev } from "$app/environment"
 

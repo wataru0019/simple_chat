@@ -13,42 +13,34 @@
 //     globalForPrisma.prisma = prisma;
 // }
 
-import pkg from "@prisma/client"
-const { PrismaClient } = pkg
-import { PrismaD1 } from "@prisma/adapter-d1"
-import { dev } from "$app/environment"
+import { PrismaClient } from '@prisma/client'
+import { PrismaD1 } from '@prisma/adapter-d1'
 
-interface CustomGlobal {
-    prisma?: PrismaClient 
+let prisma: PrismaClient
+
+declare global {
+  var __prisma: PrismaClient | undefined
 }
 
-const globalForPrisma = globalThis as CustomGlobal
+export function getPrisma(D1?: D1Database): PrismaClient {
+  if (D1) {
+    // Cloudflare D1環境
+    const adapter = new PrismaD1(D1)
+    return new PrismaClient({ adapter })
+  }
 
-// Cloudflare環境用のPrismaクライアント作成関数
-export function getPrismaClient(platform?: App.Platform): PrismaClient {
-    if (platform?.env?.DB) {
-        // Cloudflare環境（D1使用）
-        const adapter = new PrismaD1(platform.env.DB)
-        return new PrismaClient({ adapter })
-    } else {
-        // ローカル環境（SQLite使用）
-        if (globalForPrisma.prisma) {
-            return globalForPrisma.prisma
-        }
-        
-        const client = new PrismaClient()
-        
-        if (dev) {
-            globalForPrisma.prisma = client
-        }
-        
-        return client
-    }
+  // ローカル開発環境
+  if (globalThis.__prisma) {
+    return globalThis.__prisma
+  }
+
+  globalThis.__prisma = new PrismaClient()
+  return globalThis.__prisma
 }
 
-// ローカル開発用のデフォルトクライアント（後方互換性のため）
-export const prisma: PrismaClient = globalForPrisma.prisma ?? new PrismaClient()
-
-if (dev) {
-    globalForPrisma.prisma = prisma
+// ローカル開発用のデフォルトエクスポート
+if (!prisma) {
+  prisma = getPrisma()
 }
+
+export default prisma

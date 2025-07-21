@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { user } from "$lib/stores";
+  import { user, userLoaded } from "$lib/stores";
   import "../static/reset.css"
   import "../static/global.css";
 
@@ -15,6 +15,8 @@
     } catch(error) {
         console.error("セッション取得エラー：" + error)
         user.set(null)
+    } finally {
+      userLoaded.set(true)
     }
   })
 </script>

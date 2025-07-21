@@ -1,10 +1,53 @@
 <script lang="ts">
     import Header from "$lib/components/Header.svelte";
-    import { user } from "$lib/stores"
-    let editable = $state(false)
+    import { user, userLoaded } from "$lib/stores";
+    import { onMount } from "svelte";
+    let editable = $state(false);
+    let editName: string = $state("");
+    let editEmail: string = $state("");
+    let updateName = $state("")
+    let updateEmail = $state("")
+
+    onMount(() => {
+        console.log("$user:", $user);
+        console.log("$user?.name:", $user?.name);
+        console.log("editName:", editName);
+        console.log("editEmail:", editEmail);
+    })
+
+    $effect(() => {
+        if ($userLoaded && $user) {
+            editName = $user.name ?? "";
+            editEmail = $user.email ?? "";
+        }
+    })
 
     async function toggleEdit() {
         editable = !editable
+    }
+
+    async function updateUser(e: Event) {
+        e.preventDefault()
+        try {
+            const response = await fetch("/api/users", {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id: $user?.id,
+                    name: editName,
+                    email: editEmail,
+                    avator: $user?.avator
+                })
+            })
+            toggleEdit()
+            const new_user = await response.json()
+            updateName = new_user?.name
+            updateEmail = new_user?.email
+        } catch(error) {
+            console.error("ユーザー更新リクエストエラー：" + error)
+        }
     }
 </script>
 
@@ -23,28 +66,43 @@
                     <form>
                         <div class="form-control">
                             <label for="name">お名前：</label>
-                            <input type="text" name="name" placeholder="お名前を入力してください。" />
+                            <input 
+                                type="text" 
+                                name="name" 
+                                placeholder="お名前を入力してください。"
+                                bind:value={editName} />
                         </div>
                         <div class="form-control">
                             <label for="email">メール：</label>
-                            <input type="mail" name="email" placeholder="メールを入力してください。" />
+                            <input 
+                                type="mail" 
+                                name="email" 
+                                placeholder="メールを入力してください。"
+                                bind:value={editEmail} />
                         </div>
                     </form>
                 {:else}
                     <ul>
-                        <li>お名前：{ $user?.name }</li>
-                        <li>メール：{ $user?.email }</li>
+                        {#if updateName != ""}
+                            <li>お名前：{ updateName }</li>
+                        {:else}
+                            <li>お名前：{ $user?.name }</li>
+                        {/if}
+                        {#if updateEmail != ""}
+                            <li>お名前：{ updateEmail }</li>
+                        {:else}
+                            <li>お名前：{ $user?.email }</li>
+                        {/if}
                     </ul>
                 {/if}
             </div>
             <div class="edit-toggle">
                 {#if editable}
                     <button onclick={toggleEdit} class="btn destroy">破棄する</button>
-                    <button onclick={toggleEdit} class="btn primary">保存する</button>
+                    <button onclick={updateUser} class="btn primary">保存する</button>
                 {:else}
                     <button onclick={toggleEdit} class="btn primary">編集する</button>
                 {/if}
-
             </div>
         </div>
     </div>
@@ -76,6 +134,15 @@
 
     .user-info {
         padding: var(--space-md);
+    }
+
+    .user-info ul {
+        padding: var(--space-md);
+    }
+
+    .user-info ul li {
+        padding: var(--space-md) 0;
+        font-size: var(--font-size-lg);
     }
 
     .form-control {

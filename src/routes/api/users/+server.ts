@@ -1,6 +1,6 @@
 import { prisma } from "$lib/prisma";
 import { json } from '@sveltejs/kit';
-import { createUser } from "$lib/database"
+import { createUser, updateUser } from "$lib/database"
 
 export async function GET() {
     try {
@@ -21,4 +21,28 @@ export async function POST({ request }) {
     const user = await createUser(email, password)
 
     return json(user)
+}
+
+export async function PATCH({ request }) {
+    const { id, email, name, avator } = await request.json()
+
+    if(!id) {
+        return json({ message: "IDがありません"}, { status: 400 })
+    }
+    const data = {
+        email,
+        name,
+        avator
+    }
+    try {
+        const user = await updateUser(Number(id), data)
+
+        if(!user) {
+            return json({ message: "ユーザーが見つからないか、更新に失敗しました" }, { status: 404 })
+        }
+        return json(user)
+    } catch(error) {
+        console.error("ユーザー更新エラー：" + error);
+        return json({ message: "ユーザー更新中にエラーが発生しました" }, { status: 500 })
+    }
 }

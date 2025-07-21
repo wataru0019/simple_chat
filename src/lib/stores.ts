@@ -11,3 +11,4 @@ export interface AuthUser {
 }
 
 export const user = writable<AuthUser | null>(null)
+export const userLoaded = writable(false)

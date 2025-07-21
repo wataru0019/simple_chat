@@ -51,3 +51,19 @@ export async function findUserByEmail(email: string): Promise<User | null> {
         return null
     }
 }
+
+export async function updateUser(
+    id: number,
+    data: { email: string, name: string, avator: string}
+): Promise<User | null> {
+    try {
+        const updateUser = await prisma.user.update({
+            where: { id: id },
+            data: data
+        })
+        return updateUser
+    } catch(error) {
+        console.error("ユーザー更新エラー：" + error)
+        return null
+    }
+}

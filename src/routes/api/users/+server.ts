@@ -47,14 +47,14 @@
 //     }
 // }
 
-import { getPrismaClient } from "$lib/prisma";
+import { getPrisma } from "$lib/prisma";
 import { json } from '@sveltejs/kit';
 import { createUser, updateUser } from "$lib/database"
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ platform }) => {
     try {
-        const prisma = getPrismaClient(platform)
+        const prisma = getPrisma(platform?.env?.DB)
         const users = await prisma.user.findUniqueOrThrow({
             where: { id: 1 }
         })

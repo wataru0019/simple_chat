@@ -191,6 +191,24 @@ export async function findUserByEmail(email: string, platform?: App.Platform): P
   }
 }
 
+export async function updateUser(
+  id: number,
+  data: { email?: string; name?: string; avator?: string },
+  platform?: App.Platform
+): Promise<User | null> {
+  try {
+    const prisma = getPrisma(platform?.env?.DB)
+    const updateUser = await prisma.user.update({
+      where: { id: id },
+      data: data
+    })
+    return updateUser
+  } catch (error) {
+    console.error('ユーザー更新エラー：' + error)
+    return null
+  }
+}
+
 export async function createChats(userId: number, platform?: App.Platform): Promise<Chats | null> {
   try {
     const prisma = getPrisma(platform?.env?.DB)
@@ -218,6 +236,22 @@ export async function getMessages(chatsId: number, userId: number, platform?: Ap
     console.error('メッセージ取得エラー' + error)
     return null
   }
+}
+
+export async function getChats(
+    userId: number,
+    platform?: App.Platform
+) {
+    try {
+        const prisma = getPrisma(platform?.env?.DB)
+        const chat = await prisma.chats.findMany({
+            where: { userId }
+        })
+        return chat
+    } catch(error) {
+        console.error("チャット取得エラー：" + error)
+        return null
+    }
 }
 
 export async function createMessage(

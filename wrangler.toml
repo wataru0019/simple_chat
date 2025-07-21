@@ -1,0 +1,8 @@
+name = "simple-chat"
+compatibility_date = "2024-01-15"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "simple-chat-db"
+database_id = "496c526d-e0a3-4a51-a17e-859ec592f232"  # 上記コマンドで取得したID
+migrations_dir = "prisma/migrations"

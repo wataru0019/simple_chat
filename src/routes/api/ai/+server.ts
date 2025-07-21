@@ -24,13 +24,10 @@ export async function POST({ request }) {
     const { userId, chatsId, input, messages } = await request.json();
     const resAI = await invokeGemini(input, messages)
     if ( chatsId === 0 ) {
-        console.log("ChatsId:" + chatsId)
        const newChats = await createChats(userId)
-       console.log("newChats" + newChats)
        const newUserMessage = await createMessage(userId, newChats?.id, "user", input)
        const newAiMessage = await createMessage(userId, newChats?.id, "assistant", resAI)
     } else {
-        console.log("ChatsId:" + chatsId)
         const newUserMessage = await createMessage(userId, chatsId, "user", input)
         const newAiMessage = await createMessage(userId, chatsId, "assistant", resAI)
     }

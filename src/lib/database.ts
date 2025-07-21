@@ -135,9 +135,14 @@
 //         return null
 //     }
 // }
+
 import { getPrisma } from './prisma.js'
 import bcrypt from 'bcryptjs'
-import type { User, Chats, Message } from '@prisma/client'
+import type pkg from '@prisma/client'
+
+type User = pkg.User
+type Chats = pkg.Chats
+type Message = pkg.Message
 
 export async function hashPassword(password: string): Promise<string> {
   return await bcrypt.hash(password, 12)
@@ -236,22 +241,6 @@ export async function getMessages(chatsId: number, userId: number, platform?: Ap
     console.error('メッセージ取得エラー' + error)
     return null
   }
-}
-
-export async function getChats(
-    userId: number,
-    platform?: App.Platform
-) {
-    try {
-        const prisma = getPrisma(platform?.env?.DB)
-        const chat = await prisma.chats.findMany({
-            where: { userId }
-        })
-        return chat
-    } catch(error) {
-        console.error("チャット取得エラー：" + error)
-        return null
-    }
 }
 
 export async function createMessage(

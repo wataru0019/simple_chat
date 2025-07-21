@@ -13,16 +13,20 @@
 //     globalForPrisma.prisma = prisma;
 // }
 
-import { PrismaClient } from '@prisma/client'
-import { PrismaD1 } from '@prisma/adapter-d1'
 
-let prisma: PrismaClient
+import pkg from '@prisma/client'
+import adapterPkg from '@prisma/adapter-d1'
+
+const { PrismaClient } = pkg
+const { PrismaD1 } = adapterPkg
+
+let prisma: pkg.PrismaClient
 
 declare global {
-  var __prisma: PrismaClient | undefined
+  var __prisma: pkg.PrismaClient | undefined
 }
 
-export function getPrisma(D1?: D1Database): PrismaClient {
+export function getPrisma(D1?: D1Database): pkg.PrismaClient {
   if (D1) {
     // Cloudflare D1環境
     const adapter = new PrismaD1(D1)

@@ -36,8 +36,9 @@
 
 import { GoogleGenAI } from "@google/genai";
 import { json } from '@sveltejs/kit';
-import { createChats, createMessage } from "$lib/database.js";
+// import { createChats, createMessage } from "$lib/database.js";
 import type { RequestHandler } from './$types';
+import { env } from '$env/dynamic/private';
 
 async function invokeGemini(input: string, messages: [], apiKey: string){
     const ai = new GoogleGenAI({ apiKey });
@@ -59,7 +60,7 @@ async function invokeGemini(input: string, messages: [], apiKey: string){
 export const POST: RequestHandler = async ({ request, platform }) => {
     try {
         // 環境変数の取得（Cloudflare対応）
-        const apiKey = platform?.env?.GOOGLE_GEMINI_API_KEY || process.env.GOOGLE_GEMINI_API_KEY;
+        const apiKey = platform?.env?.GOOGLE_GEMINI_API_KEY || env.GOOGLE_GEMINI_API_KEY;
         
         if (!apiKey) {
             return json({ error: "GOOGLE_GEMINI_API_KEY が設定されていません" }, { status: 500 });
@@ -68,16 +69,16 @@ export const POST: RequestHandler = async ({ request, platform }) => {
         const { userId, chatsId, input, messages } = await request.json();
         const resAI = await invokeGemini(input, messages, apiKey);
         
-        if (chatsId === 0) {
-            const newChats = await createChats(userId, platform);
-            if (newChats) {
-                const newUserMessage = await createMessage(userId, newChats.id, "user", input, platform);
-                const newAiMessage = await createMessage(userId, newChats.id, "assistant", resAI, platform);
-            }
-        } else {
-            const newUserMessage = await createMessage(userId, chatsId, "user", input, platform);
-            const newAiMessage = await createMessage(userId, chatsId, "assistant", resAI, platform);
-        }
+        // if (chatsId === 0) {
+        //     const newChats = await createChats(userId, platform);
+        //     if (newChats) {
+        //         const newUserMessage = await createMessage(userId, newChats.id, "user", input, platform);
+        //         const newAiMessage = await createMessage(userId, newChats.id, "assistant", resAI, platform);
+        //     }
+        // } else {
+        //     const newUserMessage = await createMessage(userId, chatsId, "user", input, platform);
+        //     const newAiMessage = await createMessage(userId, chatsId, "assistant", resAI, platform);
+        // }
         
         return json({ message: resAI });
     } catch (error) {

@@ -2,8 +2,6 @@ import { SvelteKitAuth } from "@auth/sveltekit";
 import Credentials from "@auth/core/providers/credentials";
 import type { Provider } from "@auth/core/providers";
 import { env } from "$env/dynamic/private"
-import { findUserByEmail, verifyPassword } from "$lib/database";
-
 const providers: Provider[] = [
     Credentials({
         id: 'credentials',
@@ -21,35 +19,7 @@ const providers: Provider[] = [
         }
         },
         async authorize(credentials) {
-            if (!credentials?.email || !credentials?.password) {
-                return null
-            }
-
-            try{
-                const user = await findUserByEmail(credentials.email as string)
-                if (!user || !user.password) {
-                    return null
-                }
-
-                const isValid = await verifyPassword(
-                    credentials.password as string, 
-                    user.password
-                )
-
-                if (!isValid) {
-                    return null
-                }
-
-                return {
-                id: user.id.toString(), // Int型の場合は.toString()を追加
-                email: user.email,
-                name: user.name,
-                image: user.avatar
-                }
-            } catch (error) {
-                console.error('Authentication error:', error)
-                return null
-            }
+            return null
         }
     }
 )
